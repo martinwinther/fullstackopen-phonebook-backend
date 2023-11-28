@@ -62,6 +62,36 @@ app.delete("/api/persons/:id", (req, res) => {
 	}
 });
 
+const generateId = () => {
+	return Math.floor(Math.random() * 1000000);
+};
+
+app.post("/api/persons", (req, res) => {
+	const body = req.body;
+
+	// Check if the name or number is missing
+	if (!body.name || !body.number) {
+		return res.status(400).json({ error: "name or number is missing" });
+	}
+
+	// Check if the name already exists
+	if (persons.find((person) => person.name === body.name)) {
+		return res.status(400).json({ error: "name must be unique" });
+	}
+
+	// Create a new person object
+	const person = {
+		id: generateId(),
+		name: body.name,
+		number: body.number,
+	};
+
+	// Add the new person to the array
+	persons = persons.concat(person);
+
+	res.json(person);
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
