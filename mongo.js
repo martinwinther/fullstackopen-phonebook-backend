@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Person = require("./models/person.js");
 
 // Check if password is provided
 if (process.argv.length < 3) {
@@ -13,21 +14,6 @@ const url = `mongodb+srv://fullstack:${password}@cluster0.cwiaael.mongodb.net/?r
 
 mongoose.connect(url);
 mongoose.set("strictQuery", false);
-
-const personSchema = new mongoose.Schema({
-	name: String,
-	number: String,
-});
-
-personSchema.set("toJSON", {
-	transform: (document, returnedObject) => {
-		returnedObject.id = returnedObject._id.toString();
-		delete returnedObject._id;
-		delete returnedObject.__v;
-	},
-});
-
-const Person = mongoose.model("Person", personSchema);
 
 // Function to list all persons in the phonebook
 const listPersons = () => {
